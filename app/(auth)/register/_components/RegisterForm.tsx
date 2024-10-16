@@ -5,10 +5,10 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-export default function LoginForm() {
+export default function RegisterForm() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
-    const { login } = useAuth();
+    const { register } = useAuth();
     const router = useRouter();
    
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -18,7 +18,7 @@ export default function LoginForm() {
       
         try {
             const formData = new FormData(event.currentTarget);
-            await login(formData);
+            await register(formData);
             router.push('/feed');
         } catch (error: any) {
             setError(error.message);
@@ -34,14 +34,17 @@ export default function LoginForm() {
             {error && <div className="text-red-500 mb-4">{error}</div>}
 
             <form onSubmit={onSubmit} className="flex flex-col space-y-4">
+                <input type="text" name="first_name" placeholder="First Name" className="px-4 py-2 border rounded-md"/>
+                <input type="text" name="last_name" placeholder="Last Name" className="px-4 py-2 border rounded-md"/>
                 <input type="text" name="email" placeholder="Email" className="px-4 py-2 border rounded-md"/>
+                <input type="text" name="phone" placeholder="Phone" className="px-4 py-2 border rounded-md"/>
                 <input type="password" name="password" placeholder="Password" className="px-4 py-2 border rounded-md"/>
                 <input type="hidden" name="device_name" value="web" />
                 <button type="submit" disabled={isLoading} className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
                     {isLoading ? 'Loading...' : 'Submit'}
                 </button>
+                <p className="text-center text-gray-500 my-8">Already have an account? <Link href="/login">Login</Link></p>
             </form>
-            <p className="text-center text-gray-500 my-8">Don't have an account? <Link href="/register">Register</Link></p>
         </div>
     )
 }

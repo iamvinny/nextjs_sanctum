@@ -1,11 +1,11 @@
+import RegisterForm from "./_components/RegisterForm";
 import GuestLayout from "@/layouts/GuestLayout";
-import LoginForm from "./_components/LoginForm";
 
 export default function LoginPage() {
 
     return (
         <GuestLayout>
-            <LoginForm />
+            <RegisterForm />
         </GuestLayout>
     );
 

@@ -14,6 +14,7 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   login: (formData: any) => Promise<void>;
+  register: (formData: any) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -63,6 +64,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const register = async (formData: FormData) => {
+    try {
+      const response = await axios.post('/api/register', formData);
+      const { token } = response.data;
+
+      // Set the token in the cookie
+      nookies.set(null, 'auth_token', token, {
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+        path: '/',
+      });
+
+      // Fetch user data
+      await fetchUser();
+
+      // No need to redirect here; handle redirection in the page
+    } catch (error) {
+      console.error('Register error:', error);
+      throw error;
+    }
+  };
+
   const logout = async () => {
     await axios.post('/api/logout');
     setUser(null);
@@ -70,7 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
