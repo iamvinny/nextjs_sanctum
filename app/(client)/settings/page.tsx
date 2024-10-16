@@ -3,6 +3,7 @@ import Form from "./_components/Form";
 import Link from "next/link";
 
 export default function SettingsPage() {
+
     return (
         <ClientLayout>
             <h1>Settings</h1>
@@ -14,4 +15,5 @@ export default function SettingsPage() {
             </div>
         </ClientLayout>
     )
+
 }

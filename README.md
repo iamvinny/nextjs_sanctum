@@ -30,4 +30,12 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 ```
 
+Logout
+```php
+public function logoutUser(Request $request) {
+    $request->user()->currentAccessToken()->delete();
+    return response()->json(['message' => 'Logged out']);
+}
+```
+
 Make sure to include your backend URL in the `.env` file in the NextJs project.
