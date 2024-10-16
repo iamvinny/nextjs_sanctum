@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import nookies from 'nookies';
 import axios from '@/lib/axios';
+import { mutate } from 'swr';
 
 type User = {
   first_name: string;
@@ -54,6 +55,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         path: '/',
       });
 
+      // Clear all SWR caches after successful login
+      await mutate(() => true, undefined, { revalidate: false });
+
       // Fetch user data
       await fetchUser();
 
@@ -75,6 +79,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         path: '/',
       });
 
+      // Clear all SWR caches after successful login
+      await mutate(() => true, undefined, { revalidate: false });
+
       // Fetch user data
       await fetchUser();
 
@@ -88,7 +95,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     await axios.post('/api/logout');
     setUser(null);
-    // Handle redirection after logout in the component
+    
+    // Clear all SWR caches after logout
+    await mutate(() => true, undefined, { revalidate: false });
   };
 
   return (

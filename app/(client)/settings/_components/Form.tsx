@@ -9,7 +9,7 @@ const fetcher = (url: string) => axios.get(url).then(res => res.data);
 export default function Form() {
     const { data, error, isLoading } = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + '/api/user', fetcher);
     const { handleSubmit, isLoading: isSubmitting, error: submitError, success } = useFormSubmit();
-    if (isLoading) return <div>Loading user data...</div>;
+    if (isLoading || !data) return <div>Loading user data...</div>;
     if (error) return <div>Failed to load user</div>;
 
     return (
