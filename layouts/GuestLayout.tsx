@@ -1,5 +1,7 @@
 "use client";
 
+import Footer from "@/components/client/Footer";
+import Navbar from "@/components/client/Navbar";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -19,7 +21,9 @@ export default function GuestLayout({ children }: { children: React.ReactNode })
 
     return (
         <div>
-            {children}
+            <Navbar user={user} />
+                {children}
+            <Footer />
         </div>
     );
 
