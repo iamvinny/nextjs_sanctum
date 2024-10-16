@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import nookies from 'nookies';
 import axios from '@/lib/axios';
-import { useRouter } from 'next/navigation';
 
 type User = {
   first_name: string;
@@ -14,7 +13,7 @@ type User = {
 type AuthContextType = {
   user: User | null;
   loading: boolean;
-  login: (FormData: any) => Promise<void>;
+  login: (formData: any) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -23,15 +22,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   const fetchUser = async () => {
     try {
+      console.log('Fetching user...');
       const response = await axios.get('/api/user');
+      console.log('User data:', response.data); // Add this line
       setUser(response.data);
-    } catch {
+    } catch (error) {
+      console.error('Fetch user error:', error); // Add this line
       setUser(null);
-      router.push('/login');
+      // Removed router.push('/login'); to prevent global redirect
     } finally {
       setLoading(false);
     }
@@ -45,18 +46,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await axios.post('/api/login', formData);
       const { token } = response.data;
-  
+
       // Set the token in the cookie
       nookies.set(null, 'auth_token', token, {
         maxAge: 30 * 24 * 60 * 60, // 30 days
         path: '/',
       });
-  
+
       // Fetch user data
       await fetchUser();
-  
-      // Redirect after successful login and user data fetch
-      router.push('/feed');
+
+      // No need to redirect here; handle redirection in the page
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     await axios.post('/api/logout');
     setUser(null);
-    router.push('/login'); // Redirect after logout
+    // Handle redirection after logout in the component
   };
 
   return (

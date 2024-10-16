@@ -20,7 +20,7 @@ export default function LoginForm() {
         try {
           const formData = new FormData(event.currentTarget);
           await login(formData);
-          // The login function in AuthContext will handle redirection
+          router.push('/feed');
         } catch (error: any) {
           setError(error.message);
           console.error(error);

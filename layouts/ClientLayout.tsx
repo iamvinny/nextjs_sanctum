@@ -11,7 +11,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return (
         <div>
             <Navbar user={user} />
-            {children}
+                {children}
             <Footer />
         </div>
     );
