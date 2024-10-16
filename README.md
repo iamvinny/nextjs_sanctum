@@ -30,6 +30,27 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 ```
 
+Update Profile
+```php
+public function updateUser(Request $request) {
+    $request->validate([
+        'first_name' => 'required',
+        'last_name' => 'required',
+        'email' => 'required|email',
+        'phone' => 'required',
+    ]);
+    
+    $user = $request->user();
+    $user->first_name = $request->first_name;
+    $user->last_name = $request->last_name;
+    $user->email = $request->email;
+    $user->phone = $request->phone;
+    $user->save();
+    
+    return response()->json(['message' => 'User updated']);
+}
+```
+
 Logout
 ```php
 public function logoutUser(Request $request) {
